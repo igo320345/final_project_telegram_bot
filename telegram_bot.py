@@ -20,7 +20,7 @@ def parse_jokes(website_url):
     request = requests.get(website_url)
     soup = BS(request.text, 'html.parser')
     jokes = soup.find_all('div', class_='text')
-    return [i.text for i in jokes]
+    return [i.text for i in jokes if 0 < len(i.text) < 4096]
 
 
 # функция получения случайного анекдота дня
