@@ -1,11 +1,14 @@
 import random
 import requests
 from bs4 import BeautifulSoup as BS
+import telebot
+from telebot import types
 from topics_file import topics
 
-
 main_url = 'https://www.anekdot.ru/tags/'
+API_KEY = '5897566066:AAEiGnyPej0XfaqNoDkyX2XsVu97To0rtCY'
 
+bot = telebot.TeleBot(API_KEY)
 
 # функция формирования ссылку
 def get_url():
@@ -31,13 +34,39 @@ def get_joke_day():
 def get_random():
     random_joke = parse_jokes(main_url + topics[random.randint(0, len(topics))])
     return random_joke[random.randint(0, len(random_joke) - 1)]
-
-
+  
 # получение случайной шутки по теме
 def get_topic_joke(joke_topic):
     topic_joke_url = main_url + joke_topic
     topic_joke = parse_jokes(topic_joke_url)
     return topic_joke[random.randint(0, len(topic_joke))]
 
+@bot.message_handler(commands=['start'])
+def start(message):
+    markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
+    markup.add(types.KeyboardButton('Анекдот дня 😂'), types.KeyboardButton('Категории 📚'), types.KeyboardButton('Рандомный 🎲'))
+    bot.send_message(message.chat.id, 'Выберите:', reply_markup=markup)
 
+@bot.message_handler(content_types=['text'])
+def main(message):
+    if message.text == 'Анекдот дня 😂':
+        bot.send_message(message.chat.id, get_joke_day())
+    if message.text == 'Категории 📚':
+        markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
+        markup.add(types.KeyboardButton('Спорт 💪'), 
+                   types.KeyboardButton('Вовочка 🤷‍♂'), 
+                   types.KeyboardButton('Студенты 🤓'), 
+                   types.KeyboardButton('Британские ученые 🧑‍🔬'),
+                   types.KeyboardButton('Цитаты 💬'),
+                   types.KeyboardButton('Программисты 🧑‍💻'), 
+                   types.KeyboardButton('Вернуться в меню 🔙'))
+        bot.send_message(message.chat.id, 'Выберите категорию:', reply_markup=markup)
+    if message.text == 'Рандомный 🎲':
+        bot.send_message(message.chat.id, get_random())  
+    
+    if message.text == 'Вернуться в меню 🔙':
+        markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
+        markup.add(types.KeyboardButton('Анекдот дня 😂'), types.KeyboardButton('Категории 📚'), types.KeyboardButton('Рандомный 🎲'))
+        bot.send_message(message.chat.id, 'Выберите:', reply_markup=markup)
 
+bot.polling()
