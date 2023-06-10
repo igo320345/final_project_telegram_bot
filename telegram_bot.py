@@ -34,7 +34,12 @@ def get_joke_day():
 def get_random():
     random_joke = parse_jokes(main_url + topics[random.randint(0, len(topics))])
     return random_joke[random.randint(0, len(random_joke) - 1)]
-
+  
+# получение случайной шутки по теме
+def get_topic_joke(joke_topic):
+    topic_joke_url = main_url + joke_topic
+    topic_joke = parse_jokes(topic_joke_url)
+    return topic_joke[random.randint(0, len(topic_joke))]
 
 @bot.message_handler(commands=['start'])
 def start(message):
