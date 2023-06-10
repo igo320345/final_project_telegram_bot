@@ -47,9 +47,21 @@ def main(message):
     if message.text == 'Анекдот дня 😂':
         bot.send_message(message.chat.id, get_joke_day())
     if message.text == 'Категории 📚':
-        bot.send_message(message.chat.id, 'Выберите категорию:')
+        markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
+        markup.add(types.KeyboardButton('Спорт 💪'), 
+                   types.KeyboardButton('Вовочка 🤷‍♂'), 
+                   types.KeyboardButton('Студенты 🤓'), 
+                   types.KeyboardButton('Британские ученые 🧑‍🔬'),
+                   types.KeyboardButton('Цитаты 💬'),
+                   types.KeyboardButton('Программисты 🧑‍💻'), 
+                   types.KeyboardButton('Вернуться в меню 🔙'))
+        bot.send_message(message.chat.id, 'Выберите категорию:', reply_markup=markup)
     if message.text == 'Рандомный 🎲':
-        bot.send_message(message.chat.id, 'РАНДОМНАЯ РЖАКА')  
-
+        bot.send_message(message.chat.id, get_random())  
+    
+    if message.text == 'Вернуться в меню 🔙':
+        markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
+        markup.add(types.KeyboardButton('Анекдот дня 😂'), types.KeyboardButton('Категории 📚'), types.KeyboardButton('Рандомный 🎲'))
+        bot.send_message(message.chat.id, 'Выберите:', reply_markup=markup)
 
 bot.polling()
