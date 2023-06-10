@@ -64,5 +64,4 @@ def main(message):
         markup.add(types.KeyboardButton('Анекдот дня 😂'), types.KeyboardButton('Категории 📚'), types.KeyboardButton('Рандомный 🎲'))
         bot.send_message(message.chat.id, 'Выберите:', reply_markup=markup)
 
-
 bot.polling()
